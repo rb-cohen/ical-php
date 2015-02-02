@@ -1,0 +1,14 @@
+{
+    "name": "rb-cohen/ical-php",
+    "description": "Generate an iCal file by providing event objects",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arron Woods",
+            "email": "me@arronwoods.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    }
+}
