@@ -35,4 +35,24 @@ class CalendarTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(array($event), $calendar->getComponents());
     }
 
+    public function testToIcalCallsEventsToIcal() {
+        $event1 = $this->getMockBuilder('Ical\Component\Event')
+                ->disableOriginalConstructor()
+                ->getMock();
+
+        $event2 = $this->getMockBuilder('Ical\Component\Event')
+                ->disableOriginalConstructor()
+                ->getMock();
+
+        $event1->expects($this->once())
+                ->method('toIcal');
+
+        $event2->expects($this->once())
+                ->method('toIcal');
+
+        $calendar = new Calendar('-//Ical-PHP//Test v1//EN');
+        $calendar->addComponents(array($event1, $event2));
+        $calendar->toIcal();
+    }
+
 }
