@@ -2,6 +2,7 @@
 
 namespace Ical\Component;
 
+use Ical\Exception\RuntimeException;
 use Ical\Output\OutputAwareTrait;
 use Ical\Property\Text;
 use Ical\Property\PropertyCollectionInterface;
@@ -71,7 +72,7 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
      */
     public function on(DateTime $on) {
         if ($on->format('His') !== '000000') {
-            throw new \RuntimeException('One day events must start at midnight');
+            throw new RuntimeException('One day events must start at midnight');
         }
 
         $fin = clone $on;
@@ -110,11 +111,11 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
 
     protected function assemble() {
         if (null === $this->start || null === $this->end) {
-            throw new \RuntimeException('Start and end dates must be set on an event');
+            throw new RuntimeException('Start and end dates must be set on an event');
         }
 
         if ($this->start > $this->end) {
-            throw new \RuntimeException('Start date must be before end date');
+            throw new RuntimeException('Start date must be before end date');
         }
 
         $this->addProperty(new DateTimeStamp('DTSTAMP', $this->dtstamp));

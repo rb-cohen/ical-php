@@ -35,7 +35,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Ical\Exception\RuntimeException
      */
     public function testOnThrowsExceptionIfNotMidnight() {
         $on = new \DateTime('2015-01-01T00:00:01Z');
@@ -45,7 +45,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Ical\Exception\RuntimeException
      */
     public function testToIcalExceptionWhenNoDateSet() {
         $event = new Event('test-1');
@@ -53,7 +53,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Ical\Exception\RuntimeException
      */
     public function testToIcalExceptionWhenNoEndDate() {
         $event = new Event('test-1');
@@ -62,7 +62,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Ical\Exception\RuntimeException
      */
     public function testToIcalExceptionWhenNoStartDate() {
         $event = new Event('test-1');
@@ -72,7 +72,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @depends testBetween
-     * @expectedException \RuntimeException
+     * @expectedException \Ical\Exception\RuntimeException
      */
     public function testToIcalExceptionWhenStartDateGreaterThanEndDate() {
         $event = new Event('test-1');
