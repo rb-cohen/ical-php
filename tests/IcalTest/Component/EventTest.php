@@ -80,4 +80,13 @@ class EventTest extends \PHPUnit_Framework_TestCase {
         $event->toIcal();
     }
 
+    public function testBasicToIcal() {
+        $event = new Event('test-1', new \DateTime('2015-01-01T00:00:00'));
+        $event->between(new \DateTime('2015-01-02'), new \DateTime('2015-01-03'));
+        $ical = $event->toIcal();
+
+        $expected = file_get_contents(__DIR__ . '/../../mocks/component/event-basic.ical');
+        $this->assertEquals($expected, $ical);
+    }
+
 }

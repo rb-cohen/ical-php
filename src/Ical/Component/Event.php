@@ -4,6 +4,7 @@ namespace Ical\Component;
 
 use Ical\Exception\RuntimeException;
 use Ical\Output\OutputAwareTrait;
+use Ical\Property\DateTimeStamp;
 use Ical\Property\Text;
 use Ical\Property\PropertyCollectionInterface;
 use Ical\Property\PropertyCollectionTrait;
