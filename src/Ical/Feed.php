@@ -4,6 +4,7 @@ namespace Ical;
 
 use Ical\Component\Calendar;
 use Ical\Output\OutputAwareInterface;
+use Ical\Output\OutputAwareTrait;
 use Ical\Output\ToIcalInterface;
 
 class Feed implements OutputAwareInterface, ToIcalInterface {
