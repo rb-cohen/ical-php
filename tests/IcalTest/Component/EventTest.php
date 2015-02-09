@@ -11,6 +11,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
         $event = new Event('test-1');
         $this->assertSame('test-1', $event->uid);
         $this->assertInstanceOf('DateTime', $event->dtstamp);
+        $this->assertSame(DateTimeStamp::OUTPUT_UTC, $event->dateFormat);
     }
 
     public function testBetween() {
@@ -33,6 +34,20 @@ class EventTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertSame($on, $event->start);
         $this->assertEquals($end, $event->end);
+        $this->assertTrue(($event->dateFormat & DateTimeStamp::OUTPUT_NOTIME) > 0);
+    }
+
+    /**
+     * @depends testDefaultConstruct
+     */
+    public function testAllDay() {
+        $event = new Event('test-1');        
+
+        $event->allDay(true);
+        $this->assertSame(DateTimeStamp::OUTPUT_UTC | DateTimeStamp::OUTPUT_NOTIME, $event->dateFormat);
+
+        $event->allDay(false);
+        $this->assertSame(DateTimeStamp::OUTPUT_UTC, $event->dateFormat);
     }
 
     /**
@@ -89,7 +104,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
         $expected = file_get_contents(__DIR__ . '/../../mocks/component/event-basic.ical');
         $this->assertEquals($expected, $ical);
     }
-    
+
     public function testToIcalDateFormatTimezone() {
         $event = new Event('test-1', new \DateTime('2015-01-01T00:00:00'));
         $event->between(new \DateTime('2015-01-02', new \DateTimeZone('EST')), new \DateTime('2015-01-03', new \DateTimeZone('EST')));

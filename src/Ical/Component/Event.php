@@ -81,7 +81,18 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
         $fin->add(new \DateInterval('P1D'));
 
         $this->start($on)
-                ->end($fin);
+                ->end($fin)
+                ->allDay(true);
+
+        return $this;
+    }
+
+    public function allDay($allDay = true) {
+        if ($allDay) {
+            $this->dateFormat |= DateTimeStamp::OUTPUT_NOTIME;
+        } else {
+            $this->dateFormat ^= DateTimeStamp::OUTPUT_NOTIME;
+        }
 
         return $this;
     }

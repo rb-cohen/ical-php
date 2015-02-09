@@ -8,13 +8,15 @@ use Ical\Exception\RuntimeException;
 
 class DateTimeStamp implements PropertyInterface {
 
-    const OUTPUT_UTC = 'utc';
-    const OUTPUT_TIMEZONE = 'timezone';
-    const OUTPUT_AMBIGUOUS = 'ambiguous';
+    const OUTPUT_UTC = 1;
+    const OUTPUT_TIMEZONE = 2;
+    const OUTPUT_AMBIGUOUS = 4;
+    const OUTPUT_NOTIME = 8;
 
     public $key;
     public $value;
     public $format;
+    public $properties;
 
     public function __construct($key, DateTime $value, $format = self::OUTPUT_UTC) {
         $this->key = $this->formatKey($key);
@@ -26,17 +28,39 @@ class DateTimeStamp implements PropertyInterface {
         return strtoupper(trim($key));
     }
 
+    public function noTime($noTime = true) {
+        if ($noTime) {
+            $this->format |= DateTimeStamp::OUTPUT_NOTIME;
+        } else {
+            $this->format ^= DateTimeStamp::OUTPUT_NOTIME;
+        }
+
+        return $this;
+    }
+
     public function toIcal() {
-        return $this->key . $this->getTimezoneIdentifier() . ':' . $this->getStamp();
+        if ($this->format & self::OUTPUT_TIMEZONE) {
+            $this->properties['TZID'] = $this->value->getTimezone()->getName();
+        }
+        
+        if ($this->format & self::OUTPUT_NOTIME) {
+            $this->properties['VALUE'] = 'DATE';
+        }
+
+        return $this->key . $this->getPropertiesString() . ':' . $this->getStamp();
     }
 
     public function getStamp() {
-        switch ($this->format) {
-            case self::OUTPUT_UTC:
-                return $this->getUTCDate()->format('Ymd\THis\Z');
-            case self::OUTPUT_TIMEZONE:
-            case self::OUTPUT_AMBIGUOUS:
-                return $this->value->format('Ymd\THis');
+        $noTime = (($this->format & self::OUTPUT_NOTIME) > 0);
+
+        switch (true) {
+            case ($this->format & self::OUTPUT_UTC):
+                $format = ($noTime) ? 'Ymd' : 'Ymd\THis\Z';
+                return $this->getUTCDate()->format($format);
+            case ($this->format & self::OUTPUT_TIMEZONE):
+            case ($this->format & self::OUTPUT_AMBIGUOUS):
+                $format = ($noTime) ? 'Ymd' : 'Ymd\THis';
+                return $this->value->format($format);
             default:
                 throw new RuntimeException('Invalid output format');
         }
@@ -57,12 +81,14 @@ class DateTimeStamp implements PropertyInterface {
         return $this->toIcal();
     }
 
-    protected function getTimezoneIdentifier() {
-        switch ($this->format) {
-            case self::OUTPUT_TIMEZONE:
-                return ';TZID=' . $this->value->getTimezone()->getName();
-            default:
-                return null;
+    protected function getPropertiesString() {
+        if (count($this->properties) > 0) {
+            $pairs = array();
+            foreach ($this->properties as $key => $value) {
+                $pairs[] = $key . '=' . $value;
+            }
+
+            return ';' . implode(';', $pairs);
         }
     }
 
