@@ -157,6 +157,10 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
         if (null !== $this->location) {
             $this->addProperty(new Text('LOCATION', $this->location));
         }
+
+        if (DateTimeStamp::OUTPUT_NOTIME & $this->dateFormat) {
+            $this->addProperty(new Text('TRANSP', 'TRANSPARENT'));
+        }
     }
 
 }
