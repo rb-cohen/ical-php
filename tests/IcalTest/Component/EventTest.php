@@ -3,6 +3,7 @@
 namespace IcalTest\Component;
 
 use Ical\Component\Event;
+use Ical\Property\DateTimeStamp;
 
 class EventTest extends \PHPUnit_Framework_TestCase {
 
@@ -80,12 +81,36 @@ class EventTest extends \PHPUnit_Framework_TestCase {
         $event->toIcal();
     }
 
-    public function testBasicToIcal() {
+    public function testToIcalBasic() {
         $event = new Event('test-1', new \DateTime('2015-01-01T00:00:00'));
         $event->between(new \DateTime('2015-01-02'), new \DateTime('2015-01-03'));
         $ical = $event->toIcal();
 
         $expected = file_get_contents(__DIR__ . '/../../mocks/component/event-basic.ical');
+        $this->assertEquals($expected, $ical);
+    }
+    
+    public function testToIcalDateFormatTimezone() {
+        $event = new Event('test-1', new \DateTime('2015-01-01T00:00:00'));
+        $event->between(new \DateTime('2015-01-02', new \DateTimeZone('EST')), new \DateTime('2015-01-03', new \DateTimeZone('EST')));
+        $event->created(new \DateTime('2015-01-01'));
+        $event->setDateFormat(DateTimeStamp::OUTPUT_TIMEZONE);
+        $ical = $event->toIcal();
+
+        $expected = file_get_contents(__DIR__ . '/../../mocks/component/event-timezone.ical');
+        $this->assertEquals($expected, $ical);
+    }
+
+    public function testToIcalFull() {
+        $event = new Event('test-1', new \DateTime('2015-01-01T00:00:00'));
+        $event->between(new \DateTime('2015-01-02'), new \DateTime('2015-01-03'));
+        $event->created(new \DateTime('2015-01-01'));
+        $event->description('A test description');
+        $event->location('Greenwich');
+        $event->summary('A test summary');
+        $ical = $event->toIcal();
+
+        $expected = file_get_contents(__DIR__ . '/../../mocks/component/event-full.ical');
         $this->assertEquals($expected, $ical);
     }
 

@@ -26,13 +26,66 @@ class DateTimeStampTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
+    public function testGetUTCDate() {
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $property = new DateTimeStamp('DTSTAMP', $est);
+        $utc = $property->getUTCDate();
+
+        $this->assertEquals(new \DateTime('2015-01-01T17:00:00'), $utc);
+        $this->assertSame($est, $property->value);
+    }
+
+    /**
+     * @depends testGetUTCDate
+     */
+    public function testGetStampDefault() {
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $property = new DateTimeStamp('DTSTAMP', $est);
+        $this->assertEquals('20150101T170000Z', $property->getStamp());
+    }
+
+    public function testGetStampUTC() {
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_UTC);
+        $this->assertEquals('20150101T170000Z', $property->getStamp());
+    }
+
+    public function testGetStampAmbiguous() {
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_AMBIGUOUS);
+        $this->assertEquals('20150101T120000', $property->getStamp());
+    }
+
+    public function testGetStampTimezone() {
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_TIMEZONE);
+        $this->assertEquals('20150101T120000', $property->getStamp());
+    }
+
+    /**
+     * @depends testGetStampDefault
+     */
     public function testToIcal() {
         $property = new DateTimeStamp('DTSTAMP', new \DateTime('2015-01-01'));
         $this->assertEquals('DTSTAMP:20150101T000000Z', $property->toIcal());
     }
 
-    public function testGetUTCDate() {
-        $this->markTestIncomplete();
+    /**
+     * @depends testGetStampAmbiguous
+     */
+    public function testToIcalAmbiguous() {
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_AMBIGUOUS);
+        $this->assertEquals('DTSTAMP:20150101T120000', $property->toIcal());
+    }
+
+    /**
+     * @depends testGetStampAmbiguous
+     */
+    public function testToIcalTimezone() {
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_TIMEZONE);
+        $this->assertEquals('DTSTAMP;TZID=America/New_York:20150101T120000', $property->toIcal());
     }
 
     /**

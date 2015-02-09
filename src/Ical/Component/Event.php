@@ -30,6 +30,7 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
     public $summary;
     public $description;
     public $location;
+    public $dateFormat = DateTimeStamp::OUTPUT_UTC;
 
     public function __construct($uid, DateTime $dtstamp = null) {
         $this->uid = $uid;
@@ -110,6 +111,11 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
         return $this;
     }
 
+    public function setDateFormat($dateFormat) {
+        $this->dateFormat = $dateFormat;
+        return $this;
+    }
+
     protected function assemble() {
         if (null === $this->start || null === $this->end) {
             throw new RuntimeException('Start and end dates must be set on an event');
@@ -121,8 +127,8 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
 
         $this->addProperty(new DateTimeStamp('DTSTAMP', $this->dtstamp));
         $this->addProperty(new Text('UID', $this->uid));
-        $this->addProperty(new DateTimeStamp('DTSTART', $this->start));
-        $this->addProperty(new DateTimeStamp('DTEND', $this->end));
+        $this->addProperty(new DateTimeStamp('DTSTART', $this->start, $this->dateFormat));
+        $this->addProperty(new DateTimeStamp('DTEND', $this->end, $this->dateFormat));
         $this->addProperty(new Text('STATUS', $this->status));
 
         if (null !== $this->created) {
