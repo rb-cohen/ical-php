@@ -31,6 +31,10 @@ class DateTimeStampTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('DTSTAMP:20150101T000000Z', $property->toIcal());
     }
 
+    public function testGetUTCDate() {
+        $this->markTestIncomplete();
+    }
+
     /**
      * @depends testToIcal
      */
