@@ -27,6 +27,7 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
     public $start;
     public $end;
     public $created;
+    public $lastModified;
     public $summary;
     public $description;
     public $location;
@@ -102,6 +103,11 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
         return $this;
     }
 
+    public function lastModified(DateTime $date){
+        $this->lastModified = $date;
+        return $this;
+    }
+
     public function summary($summary) {
         $this->summary = $summary;
         return $this;
@@ -144,6 +150,10 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
 
         if (null !== $this->created) {
             $this->addProperty(new DateTimeStamp('CREATED', $this->created));
+        }
+
+        if (null !== $this->lastModified) {
+            $this->addProperty(new DateTimeStamp('LAST-MODIFIED', $this->lastModified));
         }
 
         if (null !== $this->summary) {
