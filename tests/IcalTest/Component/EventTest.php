@@ -41,7 +41,10 @@ class EventTest extends \PHPUnit_Framework_TestCase {
      * @depends testDefaultConstruct
      */
     public function testAllDay() {
-        $event = new Event('test-1');        
+        $event = new Event('test-1');
+
+        $event->allDay(false);
+        $this->assertSame(DateTimeStamp::OUTPUT_UTC, $event->dateFormat);
 
         $event->allDay(true);
         $this->assertSame(DateTimeStamp::OUTPUT_UTC | DateTimeStamp::OUTPUT_NOTIME, $event->dateFormat);
