@@ -92,7 +92,7 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
         if ($allDay) {
             $this->dateFormat |= DateTimeStamp::OUTPUT_NOTIME;
         } else {
-            $this->dateFormat ^= DateTimeStamp::OUTPUT_NOTIME;
+            $this->dateFormat &= ~DateTimeStamp::OUTPUT_NOTIME;
         }
 
         return $this;
