@@ -110,7 +110,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
 
     public function testToIcalDateFormatTimezone() {
         $event = new Event('test-1', new \DateTime('2015-01-01T00:00:00'));
-        $event->between(new \DateTime('2015-01-02', new \DateTimeZone('EST')), new \DateTime('2015-01-03', new \DateTimeZone('EST')));
+        $event->between(new \DateTime('2015-01-02', new \DateTimeZone('America/New_York')), new \DateTime('2015-01-03', new \DateTimeZone('America/New_York')));
         $event->created(new \DateTime('2015-01-01'));
         $event->setDateFormat(DateTimeStamp::OUTPUT_TIMEZONE);
         $ical = $event->toIcal();

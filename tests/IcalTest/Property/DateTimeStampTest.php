@@ -101,7 +101,7 @@ class DateTimeStampTest extends \PHPUnit_Framework_TestCase {
      * @depends testGetStampAmbiguous
      */
     public function testToIcalAmbiguous() {
-        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('America/New_York'));
         $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_AMBIGUOUS);
         $this->assertEquals('DTSTAMP:20150101T120000', $property->toIcal());
     }
@@ -110,7 +110,7 @@ class DateTimeStampTest extends \PHPUnit_Framework_TestCase {
      * @depends testGetStampAmbiguous
      */
     public function testToIcalAmbiguousNoTime() {
-        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('America/New_York'));
         $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_AMBIGUOUS);
         $property->noTime(true);
         $this->assertEquals('DTSTAMP;VALUE=DATE:20150101', $property->toIcal());
@@ -120,7 +120,7 @@ class DateTimeStampTest extends \PHPUnit_Framework_TestCase {
      * @depends testGetStampAmbiguous
      */
     public function testToIcalTimezone() {
-        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('America/New_York'));
         $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_TIMEZONE);
         $this->assertEquals('DTSTAMP;TZID=America/New_York:20150101T120000', $property->toIcal());
     }
@@ -129,7 +129,7 @@ class DateTimeStampTest extends \PHPUnit_Framework_TestCase {
      * @depends testGetStampAmbiguous
      */
     public function testToIcalTimezoneNoTime() {
-        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('EST'));
+        $est = new \DateTime('2015-01-01T12:00:00', new \DateTimeZone('America/New_York'));
         $property = new DateTimeStamp('DTSTAMP', $est, DateTimeStamp::OUTPUT_TIMEZONE|DateTimeStamp::OUTPUT_NOTIME);
         $this->assertEquals('DTSTAMP;TZID=America/New_York;VALUE=DATE:20150101', $property->toIcal());
     }
