@@ -25,6 +25,9 @@ $event->allDay(true);
 // Add this event to the calendar
 $calendar->addEvent($event);
 
+// Add the calendar to the feed
+$feed->addCalendar($calendar);
+
 // Output the feed with appropriate HTTP header
 $feed->output();
 exit;
