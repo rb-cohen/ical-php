@@ -31,7 +31,8 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
     public $summary;
     public $description;
     public $location;
-    public $dateFormat = DateTimeStamp::OUTPUT_UTC;
+    public $startDateFormat = DateTimeStamp::OUTPUT_UTC;
+    public $endDateFormat = DateTimeStamp::OUTPUT_UTC;
 
     public function __construct($uid, DateTime $dtstamp = null) {
         $this->uid = $uid;
@@ -90,9 +91,11 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
 
     public function allDay($allDay = true) {
         if ($allDay) {
-            $this->dateFormat |= DateTimeStamp::OUTPUT_NOTIME;
+            $this->startDateFormat |= DateTimeStamp::OUTPUT_NOTIME;
+            $this->endDateFormat |= DateTimeStamp::OUTPUT_NOTIME;
         } else {
-            $this->dateFormat &= ~DateTimeStamp::OUTPUT_NOTIME;
+            $this->startDateFormat &= ~DateTimeStamp::OUTPUT_NOTIME;
+            $this->endDateFormat &= ~DateTimeStamp::OUTPUT_NOTIME;
         }
 
         return $this;
@@ -144,8 +147,8 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
 
         $this->addProperty(new DateTimeStamp('DTSTAMP', $this->dtstamp));
         $this->addProperty(new Text('UID', $this->uid));
-        $this->addProperty(new DateTimeStamp('DTSTART', $this->start, $this->dateFormat));
-        $this->addProperty(new DateTimeStamp('DTEND', $this->end, $this->dateFormat));
+        $this->addProperty(new DateTimeStamp('DTSTART', $this->start, $this->startDateFormat));
+        $this->addProperty(new DateTimeStamp('DTEND', $this->end, $this->endDateFormat));
         $this->addProperty(new Text('STATUS', $this->status));
 
         if (null !== $this->created) {
@@ -168,7 +171,7 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
             $this->addProperty(new Text('LOCATION', $this->location));
         }
 
-        if (DateTimeStamp::OUTPUT_NOTIME & $this->dateFormat) {
+        if (DateTimeStamp::OUTPUT_NOTIME & $this->startDateFormat && DateTimeStamp::OUTPUT_NOTIME & $this->endDateFormat) {
             $this->addProperty(new Text('TRANSP', 'TRANSPARENT'));
         }
     }
