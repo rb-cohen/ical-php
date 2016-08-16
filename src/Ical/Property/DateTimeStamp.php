@@ -39,12 +39,17 @@ class DateTimeStamp implements PropertyInterface {
     }
 
     public function toIcal() {
-        if ($this->format & self::OUTPUT_TIMEZONE) {
-            $this->properties['TZID'] = $this->value->getTimezone()->getName();
-        }
-        
-        if ($this->format & self::OUTPUT_NOTIME) {
+        $noTime = (($this->format & self::OUTPUT_NOTIME) > 0);
+        $utc = (($this->format & self::OUTPUT_UTC) > 0);
+
+        // add the date property if not giving a time
+        if ($noTime) {
             $this->properties['VALUE'] = 'DATE';
+        }
+
+        // specify the timezone if asked for, and won't make date format invalid
+        if ($this->format & self::OUTPUT_TIMEZONE && !$noTime && !$utc) {
+            $this->properties['TZID'] = $this->value->getTimezone()->getName();
         }
 
         return $this->key . $this->getPropertiesString() . ':' . $this->getStamp();
