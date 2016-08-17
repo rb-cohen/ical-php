@@ -31,8 +31,8 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
     public $summary;
     public $description;
     public $location;
-    public $startDateFormat = DateTimeStamp::OUTPUT_UTC;
-    public $endDateFormat = DateTimeStamp::OUTPUT_UTC;
+    public $startDateFormat = DateTimeStamp::OUTPUT_TIMEZONE;
+    public $endDateFormat = DateTimeStamp::OUTPUT_TIMEZONE;
 
     public function __construct($uid, DateTime $dtstamp = null) {
         $this->uid = $uid;
@@ -132,7 +132,8 @@ class Event extends AbstractComponent implements ComponentInterface, ComponentCo
     }
 
     public function setDateFormat($dateFormat) {
-        $this->dateFormat = $dateFormat;
+        $this->startDateFormat = $dateFormat;
+        $this->endDateFormat = $dateFormat;
         return $this;
     }
 
